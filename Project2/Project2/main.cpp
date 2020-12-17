@@ -1,13 +1,15 @@
 /*
-ç»™å®šä¸€ä¸ªçƒçŠ¶STLæ¨¡å‹ï¼ˆåŠå¾„5mmï¼‰ï¼Œåœ¨XOYé¢ä¸Šï¼Œé€šè¿‡é¼ æ ‡çªç„¶ç§»åŠ¨æ¥èµ‹äºˆåˆé€Ÿåº¦å’ŒæŠ›å°„è§’ï¼Œ
-é‡åŠ›åŠ é€Ÿåº¦ä¸º-Zæ–¹å‘ï¼Œæ¯æ¬¡è½åˆ°XOYé¢ä¸Šå¼¹èµ·ï¼Œå¼¹èµ·å‰åçš„é€Ÿåº¦è¡°å‡ç³»æ•°ä¸º0.3ï¼Œ
-ç›´åˆ°é€Ÿåº¦ç»å¯¹å€¼æ¥è¿‘åˆé€Ÿåº¦çš„1/100åˆ™ä¸­æ­¢ã€‚è¯·åœ¨ä¸‰ç»´ç¯å¢ƒä¸­å®ç°è¯¥è¿‡ç¨‹ï¼Œå¹¶æ˜¾ç¤ºçƒå¿ƒçš„è½¨è¿¹æ›²çº¿
+¸ø¶¨Ò»¸öÇò×´STLÄ£ĞÍ£¨°ë¾¶5mm£©£¬ÔÚXOYÃæÉÏ£¬Í¨¹ıÊó±êÍ»È»ÒÆ¶¯À´¸³Óè³õËÙ¶ÈºÍÅ×Éä½Ç£¬
+ÖØÁ¦¼ÓËÙ¶ÈÎª-Z·½Ïò£¬Ã¿´ÎÂäµ½XOYÃæÉÏµ¯Æğ£¬µ¯ÆğÇ°ºóµÄËÙ¶ÈË¥¼õÏµÊıÎª0.3£¬
+Ö±µ½ËÙ¶È¾ø¶ÔÖµ½Ó½ü³õËÙ¶ÈµÄ1/100ÔòÖĞÖ¹¡£ÇëÔÚÈıÎ¬»·¾³ÖĞÊµÏÖ¸Ã¹ı³Ì£¬²¢ÏÔÊ¾ÇòĞÄµÄ¹ì¼£ÇúÏß
 */
+
+#include<string> 
+#include <sstream>  
 #include <GL/glut.h>
 #include <queue>
 #include <cmath>
 #include <stdlib.h>
-#include <GL/glut.h>
 #include <math.h>
 #include <iostream>
 #include <vector>
@@ -15,13 +17,13 @@
 #include <time.h>
 
 using namespace std;
-//è‰²å½©å…¨å±€å¸¸é‡
-GLfloat WHITE[] = { 1, 1, 1 };    //ç™½è‰²
-GLfloat RED[] = { 1, 0, 0 };    //çº¢è‰²
-GLfloat GREEN[] = { 0, 1, 0 };    //ç»¿è‰²
+//É«²ÊÈ«¾Ö³£Á¿
+GLfloat WHITE[] = { 1, 1, 1 };    //°×É«
+GLfloat RED[] = { 1, 0, 0 };    //ºìÉ«
+GLfloat GREEN[] = { 0, 1, 0 };    //ÂÌÉ«
 GLfloat BLACK[] = { 0, 0, 0 };//Black
 
-								  //é¼ æ ‡ç‚¹å‡»ç•Œé¢å‰åçš„æ—¶é—´
+								  //Êó±êµã»÷½çÃæÇ°ºóµÄÊ±¼ä
 clock_t time1;
 clock_t time2;
 clock_t time3;
@@ -29,41 +31,44 @@ clock_t time4;
 
 double User_radius;
 
-//é¼ æ ‡åˆšå¥½æŒ‰ä¸‹æ—¶åœ¨ç•Œé¢ä¸Šçš„åæ ‡
+//»­Ö¸Ê¾Ïß
+double mX, mY;
+
+//Êó±ê¸ÕºÃ°´ÏÂÊ±ÔÚ½çÃæÉÏµÄ×ø±ê
 double mouseX1;
 double mouseY1;
 double mouseX12;
 double mouseY12;
 
-//é¼ æ ‡æ¾å¼€æ—¶åœ¨ç•Œé¢ä¸Šçš„åæ ‡
+//Êó±êËÉ¿ªÊ±ÔÚ½çÃæÉÏµÄ×ø±ê
 double mouseX2;
 double mouseY2;
 double mouseX22;
 double mouseY22;
 
-//é¼ æ ‡ç§»åŠ¨çš„é€Ÿåº¦
+//Êó±êÒÆ¶¯µÄËÙ¶È
 double mouseVX=0;
 double mouseVY=0;
 double mouseVX2=0;
 double mouseVY2=0;
 
-//åˆ¤æ–­ç”¨æˆ·æ˜¯å¦ç‚¹å‡»äº†å±å¹•
+//ÅĞ¶ÏÓÃ»§ÊÇ·ñµã»÷ÁËÆÁÄ»
 int flag = 0;
 
-//å°çƒä¸­å¿ƒç‚¹ä½ç½®ï¼ˆå…¨å±€å˜é‡ï¼‰
+//Ğ¡ÇòÖĞĞÄµãÎ»ÖÃ£¨È«¾Ö±äÁ¿£©
 queue<vector<double>> centerList;
 
-//æ‘„åƒæœºç±»ï¼šæ°´å¹³ç§»åŠ¨åŠå¾„ä¸º10ï¼ŒæŒ‰ä¸Šä¸‹é”®åˆ™å‚ç›´ç§»åŠ¨
+//ÉãÏñ»úÀà£ºË®Æ½ÒÆ¶¯°ë¾¶Îª10£¬°´ÉÏÏÂ¼üÔò´¹Ö±ÒÆ¶¯
 class Camera {
 public:
-	double theta;      //ç¡®å®šxå’Œzçš„ä½ç½®
-	double y;          //yä½ç½®
-	double dTheta;     //è§’åº¦å¢é‡
-	double dy;         //ä¸Šä¸‹yå¢é‡
+	double theta;      //È·¶¨xºÍzµÄÎ»ÖÃ
+	double y;          //yÎ»ÖÃ
+	double dTheta;     //½Ç¶ÈÔöÁ¿
+	double dy;         //ÉÏÏÂyÔöÁ¿
 public:
-	//ç±»æ„é€ å‡½æ•°â€”é»˜è®¤åˆå§‹åŒ–ç”¨æ³•
+	//Àà¹¹Ôìº¯Êı¡ªÄ¬ÈÏ³õÊ¼»¯ÓÃ·¨
 	Camera() : theta(0), y(10), dTheta(0.04), dy(0.2) {}
-	//ç±»æ–¹æ³•
+	//Àà·½·¨
 	double getX() { return 0+25 * cos(theta); }
 	double getY() { return y; }
 	double getZ() { return 0+25 * sin(theta); }
@@ -73,19 +78,19 @@ public:
 	void moveDown() { if (y > dy) y -= dy; }
 };
 
-//çƒç±»å®šä¹‰
-//åŠå¾„ã€é¢œè‰²ã€æœ€å¤§é«˜åº¦
-//xå’Œzå›ºå®š
-//ç”¨lame bouncing algorithm
-//æ¯å¸§ä¸Šä¸‹ç§»åŠ¨0.05å•ä½
+//ÇòÀà¶¨Òå
+//°ë¾¶¡¢ÑÕÉ«¡¢×î´ó¸ß¶È
+//xºÍz¹Ì¶¨
+//ÓÃlame bouncing algorithm
+//Ã¿Ö¡ÉÏÏÂÒÆ¶¯0.05µ¥Î»
 
-//ç›¸æœºåˆå§‹ä½ç½®
+//Ïà»ú³õÊ¼Î»ÖÃ
 float ballx = 0;
 float gy = 3;
 float ballz = 0;
 
 class Ball {
-	//ç±»çš„å±æ€§
+	//ÀàµÄÊôĞÔ
 	GLfloat* color;
 	double maximumHeight;
 	double x;
@@ -95,10 +100,10 @@ class Ball {
 	double vy;
 	double vx2;
 	double vy2;
-	int direction;   //æ–¹å‘
+	int direction;   //·½Ïò
 public:
 	double radius;
-	//æ„é€ å‡½æ•°
+	//¹¹Ôìº¯Êı
 	Ball(double r, GLfloat* c, double h, double x, double z) :
 		radius(0.5), color(c), maximumHeight(h), direction(-1),
 		y(h), x(x), z(z), vx(0.3), vy(0), vx2(0),vy2(0) {
@@ -159,9 +164,9 @@ public:
 		direction = direct;
 	}
 
-	//æ›´æ–°å’Œç»˜åˆ¶æ–¹æ³•
+	//¸üĞÂºÍ»æÖÆ·½·¨
 	void update() {
-		//æ­£åè¿åŠ¨
+		//Õı·´ÔË¶¯
 		x += vx;
 		if (flag == 1) {
 			vy2 = 0;
@@ -224,55 +229,55 @@ public:
 
 
 		glPushMatrix();
-		//å•ç‹¬è®¾ç½®æ¯ä¸ªçƒçš„æè´¨å‚æ•°
+		//µ¥¶ÀÉèÖÃÃ¿¸öÇòµÄ²ÄÖÊ²ÎÊı
 		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
 		glTranslated(x, y, z);
-		//åˆ›å»ºçƒ
+		//´´½¨Çò
 		glutSolidSphere(radius, 30, 30);
 		glPopMatrix();
 
 	}
 };
 
-//æ£‹ç›˜æ ¼ï¼šæ²¿xå’Œzå¹³é¢åˆ†å¸ƒ
-//ç‚¹å…‰æºä½ç½®è®¾ç½®ä¸º(10ï¼Œ25ï¼Œ25).
+//ÆåÅÌ¸ñ£ºÑØxºÍzÆ½Ãæ·Ö²¼
+//µã¹âÔ´Î»ÖÃÉèÖÃÎª(10£¬25£¬25).
 class Checkerboard {
 	int displayListId;
 	int width;
 	int depth;
 public:
-	//æ„é€ å‡½æ•°
+	//¹¹Ôìº¯Êı
 	Checkerboard(int width, int depth) : width(width), depth(depth) {}
 
-	//ä¸­å¿ƒX
+	//ÖĞĞÄX
 	double centerx() { return width / 2; }
 
-	//ä¸­å¿ƒY
+	//ÖĞĞÄY
 	double centerz() { return depth / 2; }
 
-	//åˆ›å»ºæ–¹æ³•
+	//´´½¨·½·¨
 	void create() {
-		displayListId = glGenLists(1);     //æ¯ä¸ªæ˜¾ç¤ºåˆ—è¡¨å¯¹åº”1ä¸ªç¼–å·â€”â€”å…³è”èµ·æ¥
-										   //æ–°å»ºæ“ä½œè¡¨
-		glNewList(displayListId, GL_COMPILE);   //æŠŠä¸‹è¿°å‘½ä»¤è£…å…¥æ˜¾ç¤ºåˆ—è¡¨ä½†ä¸æ˜¾ç¤º
+		displayListId = glGenLists(1);     //Ã¿¸öÏÔÊ¾ÁĞ±í¶ÔÓ¦1¸ö±àºÅ¡ª¡ª¹ØÁªÆğÀ´
+										   //ĞÂ½¨²Ù×÷±í
+		glNewList(displayListId, GL_COMPILE);   //°ÑÏÂÊöÃüÁî×°ÈëÏÔÊ¾ÁĞ±íµ«²»ÏÔÊ¾
 
-												//å…‰æºä½ç½®å‚æ•°æ£‹ç›˜ä¸­å¿ƒxz50*50
+												//¹âÔ´Î»ÖÃ²ÎÊıÆåÅÌÖĞĞÄxz50*50
 		GLfloat lightPosition[] = { 10, 25, 25, 1 };
 
-		//è®¾ç½®å…‰æºä½ç½®
+		//ÉèÖÃ¹âÔ´Î»ÖÃ
 		glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 
-		//å¼€å§‹ç»˜åˆ¶å››è¾¹å½¢
+		//¿ªÊ¼»æÖÆËÄ±ßĞÎ
 		glBegin(GL_QUADS);
 
-		//æ³•å‘é‡æ–¹å‘
+		//·¨ÏòÁ¿·½Ïò
 		glNormal3d(0, 1, 0);
 		for (int x = 0; x < width - 1; x++) {
 			for (int z = 0; z < depth - 1; z++) {
-				//è®¾ç½®æ¯ä¸ªæ ¼å­çš„æè´¨å±æ€§
+				//ÉèÖÃÃ¿¸ö¸ñ×ÓµÄ²ÄÖÊÊôĞÔ
 				glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE,
 					(x + z) % 2 == 0 ? RED : WHITE);
-				//å››è¾¹å½¢çš„4ä¸ªç‚¹åæ ‡
+				//ËÄ±ßĞÎµÄ4¸öµã×ø±ê
 				glVertex3d(x, 0, z);
 				glVertex3d(x + 1, 0, z);
 				glVertex3d(x + 1, 0, z + 1);
@@ -282,20 +287,20 @@ public:
 		glEnd();
 		glEndList();
 	}
-	//æŒ‰åˆ—è¡¨ç¼–å·ç»˜åˆ¶æ£‹ç›˜æ ¼
+	//°´ÁĞ±í±àºÅ»æÖÆÆåÅÌ¸ñ
 	void draw() {
 		glCallList(displayListId);
 	}
 };
 
-//å…¨å±€å˜é‡ï¼šæ£‹ç›˜æ ¼ã€ç›¸æœºå’Œ3ä¸ªçƒçš„æ•°ç»„
+//È«¾Ö±äÁ¿£ºÆåÅÌ¸ñ¡¢Ïà»úºÍ3¸öÇòµÄÊı×é
 Checkerboard checkerboard(50, 50);
 Camera camera;
-//åˆ›å»º3ä¸ªå°çƒçš„æ•°ç»„
+//´´½¨3¸öĞ¡ÇòµÄÊı×é
 
-//å°çƒçš„åˆå§‹åæ ‡x50 z50
-//æ£‹ç›˜å¤§å°ä¸ºx*z=100*100
-//xæ–¹å‘å¹³è¡Œå±å¹•å‘å·¦ zå‚ç›´å±å¹•å‘é‡Œ
+//Ğ¡ÇòµÄ³õÊ¼×ø±êx50 z50
+//ÆåÅÌ´óĞ¡Îªx*z=100*100
+//x·½ÏòÆ½ĞĞÆÁÄ»Ïò×ó z´¹Ö±ÆÁÄ»ÏòÀï
 double initBallH = 5;
 double initBallX = 25;
 double initBallZ = 25;
@@ -305,49 +310,49 @@ Ball balls[] = {
 };
 
 
-//è‡ªå®šä¹‰åˆå§‹åŒ–æ–¹æ³•
+//×Ô¶¨Òå³õÊ¼»¯·½·¨
 void init() {
-	//å…è®¸æ·±åº¦æµ‹è¯•
+	//ÔÊĞíÉî¶È²âÊÔ
 	glEnable(GL_DEPTH_TEST);
-	//è®¾ç½®æ•£å°„å’Œé•œåƒåå°„ä¸ºç™½å…‰
+	//ÉèÖÃÉ¢ÉäºÍ¾µÏñ·´ÉäÎª°×¹â
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, WHITE);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, WHITE);
-	//è®¾ç½®å‰è¡¨é¢çš„é«˜å…‰é•œåƒåå°„ä¸ºç™½å…‰
+	//ÉèÖÃÇ°±íÃæµÄ¸ß¹â¾µÏñ·´ÉäÎª°×¹â
 	glMaterialfv(GL_FRONT, GL_SPECULAR, WHITE);
-	//è®¾ç½®å‰è¡¨é¢æ•£å°„å…‰åå…‰ç³»æ•°
+	//ÉèÖÃÇ°±íÃæÉ¢Éä¹â·´¹âÏµÊı
 	glMaterialf(GL_FRONT, GL_SHININESS, 30);
-	//å…è®¸ç¯å…‰
+	//ÔÊĞíµÆ¹â
 	glEnable(GL_LIGHTING);
-	//æ‰“å¼€0#ç¯
+	//´ò¿ª0#µÆ
 	glEnable(GL_LIGHT0);
-	//åˆ›å»ºæ£‹ç›˜æ ¼
+	//´´½¨ÆåÅÌ¸ñ
 	checkerboard.create();
 
 	
 }
 
-//è‡ªå®šä¹‰ç»˜åˆ¶å‡½æ•°,é€šè¿‡ç±»ç»˜åˆ¶å„å¯¹è±¡ï¼Œdisplayå‡½æ•°ä»£ç å¾—ä»¥ç®€åŒ–
+//×Ô¶¨Òå»æÖÆº¯Êı,Í¨¹ıÀà»æÖÆ¸÷¶ÔÏó£¬displayº¯Êı´úÂëµÃÒÔ¼ò»¯
 void display() {
-	//æ¸…é™¤å‰ä¸€å¸§ç»˜å›¾ç»“æœ
+	//Çå³ıÇ°Ò»Ö¡»æÍ¼½á¹û
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//è£…å…¥å•ä½é˜µ
+	//×°Èëµ¥Î»Õó
 	glLoadIdentity();
 
-	//è®¾ç½®è§†è§’â€”â€”æ‘„åƒæœºå‚æ•°
-	gluLookAt(camera.getX(), camera.getY(), camera.getZ(),    //æ‘„åƒæœºä½ç½®
-		ballx, 3, ballz,   //ç„¦ç‚¹åæ ‡
-		0.0, 1.0, 0.0);   //æ‘„åƒæœºæœºé¡¶æ–¹å‘çŸ¢é‡
+	//ÉèÖÃÊÓ½Ç¡ª¡ªÉãÏñ»ú²ÎÊı
+	gluLookAt(camera.getX(), camera.getY(), camera.getZ(),    //ÉãÏñ»úÎ»ÖÃ
+		ballx, 3, ballz,   //½¹µã×ø±ê
+		0.0, 1.0, 0.0);   //ÉãÏñ»ú»ú¶¥·½ÏòÊ¸Á¿
 
-						  //ç»˜åˆ¶æ£‹ç›˜
+						  //»æÖÆÆåÅÌ
 	checkerboard.draw();
 
-	//ç»˜åˆ¶å°çƒ
+	//»æÖÆĞ¡Çò
 	for (int i = 0; i < sizeof balls / sizeof(Ball); i++) {
 
 		if (flag == 0)
 		{
-			//å¦‚æœæ²¡æœ‰é¼ æ ‡çš„åŠ¨ä½œï¼Œåˆ™è®©å°çƒä¸€ç›´ä¿æŒåœ¨èµ·ç‚¹çš„ä½ç½®
+			//Èç¹ûÃ»ÓĞÊó±êµÄ¶¯×÷£¬ÔòÈÃĞ¡ÇòÒ»Ö±±£³ÖÔÚÆğµãµÄÎ»ÖÃ
 			balls[i].updateX(initBallX);
 			balls[i].updateY(initBallH);
 			balls[i].updateZ(initBallZ);
@@ -356,34 +361,34 @@ void display() {
 		}
 		else if (flag == 1 || flag == 2)
 		{
-			//æ›´æ–°ä½ç½®å¹¶ç»˜å›¾
+			//¸üĞÂÎ»ÖÃ²¢»æÍ¼
 			balls[i].updateDirection(-1);
 			balls[i].update();
 
-			//æ›´æ–°å°çƒçš„åˆå§‹é€Ÿåº¦ä¸ºé¼ æ ‡çš„ç§»åŠ¨é€Ÿåº¦
+			//¸üĞÂĞ¡ÇòµÄ³õÊ¼ËÙ¶ÈÎªÊó±êµÄÒÆ¶¯ËÙ¶È
 			//balls[i].updateVX(mouseVX);
 			//balls[i].updateVY(mouseVY);
 
-			//åˆ›å»ºä¸€ä¸ªvectorï¼Œä¿å­˜å½“å‰æ—¶åˆ»å°çƒçš„xyz
+			//´´½¨Ò»¸övector£¬±£´æµ±Ç°Ê±¿ÌĞ¡ÇòµÄxyz
 			vector<double> cent;
 			cent.clear();
 			cent.push_back(balls[i].getX());
 			cent.push_back(balls[i].getY());
 			cent.push_back(balls[i].getZ());
-			//æ·»åŠ åˆ°å…¨å±€å˜é‡centerListä¸­
+			//Ìí¼Óµ½È«¾Ö±äÁ¿centerListÖĞ
 			if (centerList.size() == 200) {
 				centerList.pop();
 			}
 			centerList.push(cent);
 
-			//ç»˜åˆ¶å°çƒè¿åŠ¨çš„è½¨è¿¹
+			//»æÖÆĞ¡ÇòÔË¶¯µÄ¹ì¼£
 			glColor3f(1.0f, 0.0f, 0.0f);
-			glPointSize(5.0f);
+			glPointSize(8.0f);
 			glBegin(GL_POINTS);
 			queue<vector<double>> tempQueue(centerList);
-			for (int i = 0; i < centerList.size(); i++)
+			for(unsigned i = 0; i<centerList.size(); i++)
 			{
-				//ç»˜åˆ¶åœ†å¿ƒç‚¹
+				//»æÖÆÔ²ĞÄµã
 				vector<double> temp = tempQueue.front();
 				tempQueue.pop();
 				glVertex3f(temp[0], temp[1], temp[2]);
@@ -394,7 +399,7 @@ void display() {
 	glutSwapBuffers();
 }
 
-//çª—å£è°ƒæ•´å¤§å°æ—¶è°ƒç”¨çš„å‡½æ•°
+//´°¿Úµ÷Õû´óĞ¡Ê±µ÷ÓÃµÄº¯Êı
 void reshape(GLint w, GLint h) {
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
@@ -403,17 +408,17 @@ void reshape(GLint w, GLint h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
-//è‡ªå®šä¹‰è®¡æ—¶å™¨å‡½æ•°
+//×Ô¶¨Òå¼ÆÊ±Æ÷º¯Êı
 void timer(int v) {
-	//å½“è®¡æ—¶å™¨å”¤é†’æ—¶æ‰€è°ƒç”¨çš„å‡½æ•°
+	//µ±¼ÆÊ±Æ÷»½ĞÑÊ±Ëùµ÷ÓÃµÄº¯Êı
 	glutPostRedisplay();
-	//è®¾ç½®ä¸‹ä¸€æ¬¡è®¡æ—¶å™¨çš„å‚æ•°
-	glutTimerFunc(1000 / 60, timer/*å‡½æ•°å*/, v);
+	//ÉèÖÃÏÂÒ»´Î¼ÆÊ±Æ÷µÄ²ÎÊı
+	glutTimerFunc(1000 / 60, timer/*º¯ÊıÃû*/, v);
 }
 
-//é”®ç›˜å¤„ç†å‡½æ•°
+//¼üÅÌ´¦Àíº¯Êı
 void onKey(int key, int, int) {
-	//æŒ‰é”®ï¼šä¸Šä¸‹å·¦å³
+	//°´¼ü£ºÉÏÏÂ×óÓÒ
 	switch (key) {
 	case GLUT_KEY_LEFT: camera.moveLeft(); break;
 	case GLUT_KEY_RIGHT: camera.moveRight(); break;
@@ -423,12 +428,12 @@ void onKey(int key, int, int) {
 	glutPostRedisplay();
 }
 
-//æ³¨å†Œé¼ æ ‡äº‹ä»¶å‘ç”Ÿæ—¶çš„å›è°ƒå‡½æ•°
+//×¢²áÊó±êÊÂ¼ş·¢ÉúÊ±µÄ»Øµ÷º¯Êı
 void mouseCB(int button, int state, int x, int y)
 {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		time1 = clock(); //è·å–é¼ æ ‡æŒ‰ä¸‹æ—¶çš„æ—¶é—´ï¼ˆæ¯«ç§’ï¼‰
+		time1 = clock(); //»ñÈ¡Êó±ê°´ÏÂÊ±µÄÊ±¼ä£¨ºÁÃë£©
 		cout << "time1:" << time1 << endl;
 		mouseX1 = x;
 		mouseY1 = y;
@@ -437,14 +442,14 @@ void mouseCB(int button, int state, int x, int y)
 	}
 	else if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
 	{
-		time2 = clock(); //è·å–é¼ æ ‡æ¾å¼€æ—¶çš„æ—¶é—´ï¼ˆæ¯«ç§’ï¼‰
+		time2 = clock(); //»ñÈ¡Êó±êËÉ¿ªÊ±µÄÊ±¼ä£¨ºÁÃë£©
 		cout << "time2:" << time2 << endl;
 		mouseX2 = x;
 		mouseY2 = y;
 		cout << "2 Mouse x:" << x << endl;
 		cout << "2 Mouse y:" << y << endl;
 
-		//è®¡ç®—é¼ æ ‡åœ¨xå’Œyæ–¹å‘çš„æ‹–åŠ¨é€Ÿåº¦
+		//¼ÆËãÊó±êÔÚxºÍy·½ÏòµÄÍÏ¶¯ËÙ¶È
 		mouseVX = (mouseX1 - mouseX2) / (time2 * 1.0 - time1 * 1.0);
 		mouseVY = (mouseY1 - mouseY2) / (time2 * 1.0 - time1 * 1.0);
 
@@ -461,7 +466,7 @@ void mouseCB(int button, int state, int x, int y)
 
 	else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
 	{
-		time3 = clock(); //è·å–é¼ æ ‡æŒ‰ä¸‹æ—¶çš„æ—¶é—´ï¼ˆæ¯«ç§’ï¼‰
+		time3 = clock(); //»ñÈ¡Êó±ê°´ÏÂÊ±µÄÊ±¼ä£¨ºÁÃë£©
 		cout << "time2:" << time3 << endl;
 		mouseX12 = x;
 		mouseY12 = y;
@@ -470,14 +475,14 @@ void mouseCB(int button, int state, int x, int y)
 	}
 	else if (button == GLUT_RIGHT_BUTTON && state == GLUT_UP)
 	{
-		time4 = clock(); //è·å–é¼ æ ‡æ¾å¼€æ—¶çš„æ—¶é—´ï¼ˆæ¯«ç§’ï¼‰
+		time4 = clock(); //»ñÈ¡Êó±êËÉ¿ªÊ±µÄÊ±¼ä£¨ºÁÃë£©
 		cout << "time2:" << time4 << endl;
 		mouseX22 = x;
 		mouseY22 = y;
 		cout << "2 Mouse x:" << x << endl;
 		cout << "2 Mouse y:" << y << endl;
 
-		//è®¡ç®—é¼ æ ‡åœ¨xå’Œyæ–¹å‘çš„æ‹–åŠ¨é€Ÿåº¦
+		//¼ÆËãÊó±êÔÚxºÍy·½ÏòµÄÍÏ¶¯ËÙ¶È
 		mouseVX2 = (mouseX12 - mouseX22) / (time4 * 1.0 - time3 * 1.0);
 		mouseVY2 = (mouseY12 - mouseY22) / (time4 * 1.0 - time3 * 1.0);
 
@@ -495,18 +500,52 @@ void mouseCB(int button, int state, int x, int y)
 	glutPostRedisplay();
 }
 
-//å¤„ç†é¼ æ ‡ç§»åŠ¨æ—¶å€™çš„å›è°ƒå‡½æ•°, xå’Œyä»£è¡¨å½“å‰é¼ æ ‡çš„åæ ‡
+//´¦ÀíÊó±êÒÆ¶¯Ê±ºòµÄ»Øµ÷º¯Êı, xºÍy´ú±íµ±Ç°Êó±êµÄ×ø±ê
 void mouseMove(int x, int y)
 {
-	//mouseX = x;
-	//mouseY = y;
-	//cout << "Current Mouse x:" << x << endl;
-	//cout << "Current Mouse y:" << y << endl;
+	mX = x;
+	mY = y;
+	
 }
 
+
+bool isNum(string str)
+{
+	stringstream sin(str);
+	double d;
+	char c;
+	if (!(sin >> d))
+	{
+		return false;
+	}
+	if (sin >> c)
+	{
+		return false;
+	}
+	return true;
+}
+
+
+
 int main(int argc, char** argv) {
-	cout << "è¯·è¾“å…¥çƒçš„åŠå¾„å¤§å°ï¼Œå•ä½æ˜¯mm" << endl;
-	cin >> User_radius;
+
+
+	cout << "ÇëÊäÈëÇòµÄ°ë¾¶´óĞ¡£¬½¨Òé´óĞ¡Îª(0,15)£¬µ¥Î»ÊÇmm" << endl;
+	std::string str;
+	double temp;
+	while(std::getline(cin,str)){
+		stringstream num(str);
+		
+		num >> temp;
+		if (isNum(str)) {
+			if(temp<=15.0&&temp>0)break;
+			else cout << "ÇëÊäÈë(0, 15)" << endl;
+		}
+		
+		else cout << "ÇëÊäÈëÊı×Ö" << endl;
+	}
+	
+	User_radius=temp;
 	for (auto i=0; i < sizeof balls / sizeof(Ball); ++i) {
 		balls[i].radius = User_radius/10;
 	}
@@ -515,15 +554,15 @@ int main(int argc, char** argv) {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowPosition(80, 80);
 	glutInitWindowSize(800, 600);
-	glutCreateWindow("è·³è·ƒçš„çƒ");
-	glutDisplayFunc(display);   //è®¾ç½®æ˜¾ç¤ºå‡½æ•°
-	glutReshapeFunc(reshape);   //è®¾ç½®çª—å£è°ƒæ•´å¤§å°çš„å‡½æ•°
-	glutSpecialFunc(onKey);   //è®¾ç½®æŒ‰é”®å¤„ç†å‡½æ•°
-	glutMouseFunc(mouseCB);   //æ³¨å†Œé¼ æ ‡äº‹ä»¶å‘ç”Ÿæ—¶çš„å›è°ƒå‡½æ•°
-	glutMotionFunc(mouseMove);  //å¤„ç†é¼ æ ‡ç§»åŠ¨æ—¶å€™çš„å›è°ƒå‡½æ•°
-	glutTimerFunc(100, timer, 0);  //è®¾ç½®è®¡æ—¶å™¨å‡½æ•°--æ¯100msè¢«è°ƒç”¨1æ¬¡
-	init();//è‡ªå®šä¹‰åˆå§‹åŒ–å‡½æ•°
-	glutMainLoop();//è¿›å…¥openglä¸»å¾ªç¯
+	glutCreateWindow("ÌøÔ¾µÄÇò");
+	glutDisplayFunc(display);   //ÉèÖÃÏÔÊ¾º¯Êı
+	glutReshapeFunc(reshape);   //ÉèÖÃ´°¿Úµ÷Õû´óĞ¡µÄº¯Êı
+	glutSpecialFunc(onKey);   //ÉèÖÃ°´¼ü´¦Àíº¯Êı
+	glutMouseFunc(mouseCB);   //×¢²áÊó±êÊÂ¼ş·¢ÉúÊ±µÄ»Øµ÷º¯Êı
+	glutMotionFunc(mouseMove);  //´¦ÀíÊó±êÒÆ¶¯Ê±ºòµÄ»Øµ÷º¯Êı
+	glutTimerFunc(100, timer, 0);  //ÉèÖÃ¼ÆÊ±Æ÷º¯Êı--Ã¿100ms±»µ÷ÓÃ1´Î
+	init();//×Ô¶¨Òå³õÊ¼»¯º¯Êı
+	glutMainLoop();//½øÈëopenglÖ÷Ñ­»·
 
 	return 0;
 }
