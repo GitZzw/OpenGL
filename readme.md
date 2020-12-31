@@ -1,5 +1,5 @@
 ## openGL渲染实现跳跃的小球
-asdasdkjnnnnnnnasdffffffffffffffadsffffffffffffffffffffffffffffafdsfffffff
+asdasdkjnnnnnnnasdfffffffffff
 > exe直接运行
 
 > 参考  
